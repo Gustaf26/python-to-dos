@@ -2,6 +2,7 @@
   A cleanup feature enables you to delete completed tasks which are more than a week old - unless
   you have flagged them as 'protected'."""
 from collections import OrderedDict
+import random
 import datetime
 import os
 
@@ -81,8 +82,8 @@ def add_entry(index, entries):
     else:
         protect = False
 
-    taskinfo = (new_task, False, protect, 20060105)
-    cur.execute("INSERT INTO mytodos VALUES(?,?,?,?)" , taskinfo)
+    taskinfo = (new_task, False, protect, random.randint(0,10000000), ToDo.timestamp)
+    cur.execute("INSERT INTO mytodos VALUES(?,?,?,?,?)" , taskinfo)
 
 
 def modify_entry(index, entries):
@@ -155,7 +156,7 @@ def menu_loop():
                 main_menu[choice](index, entries)
             except ZeroDivisionError:
                 continue
-            entries = ToDo.select().order_by(ToDo.timestamp.asc())  # update entries after operations
+            entries = cur.select().order_by(ToDo.timestamp.asc())  # update entries after operations
 
         elif choice == 'n':
             index += 1
