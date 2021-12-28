@@ -80,8 +80,9 @@ def add_entry(index, entries):
         protect = True
     else:
         protect = False
-    ToDo.create(task=new_task,
-                protected=protect)
+
+    taskinfo = (new_task, False, protect, 20060105)
+    cur.execute("INSERT INTO mytodos VALUES(?,?,?,?)" , taskinfo)
 
 
 def modify_entry(index, entries):
@@ -137,7 +138,7 @@ def toggle_protection(entry):
 def menu_loop():
     choice = None
     index = 0  # shows which entry is selected
-    entries = cur.select().order_by(ToDo.timestamp.asc())
+    entries = cur.fetchall()
     while choice != 'q':
         if len(entries) != 0:
             view_entries(index, entries, False)
