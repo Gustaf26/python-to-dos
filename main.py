@@ -5,9 +5,13 @@ from collections import OrderedDict
 import datetime
 import os
 
-from peewee import *
+import sqlite3
 
-db = SqliteDatabase('to_do_list.db')
+con = sqlite3.connect('to_do_list.db')
+con.isolation_level = None
+cur = con.cursor()
+
+# from peewee import *
 
 
 class ToDo(Model):
@@ -19,7 +23,7 @@ class ToDo(Model):
     protected = BooleanField(default=False)
 
     class Meta:
-        database = db
+        database = con
 
 
 def clear():
@@ -29,8 +33,8 @@ def clear():
 
 def initialize():
     """Connect to database, build tables if they don't exist"""
-    db.connect()
-    db.create_tables([ToDo], safe=True)
+    con.connect()
+    con.create_tables([ToDo], safe=True)
 
 
 def view_entries(index, entries, single_entry):
@@ -176,4 +180,4 @@ sub_menu = OrderedDict([
 if __name__ == '__main__':
     initialize()
     menu_loop()
-    db.close()
+    con.close()
