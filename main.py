@@ -22,7 +22,7 @@ class ToDo():
     protected = False
 
     class Meta:
-        database = cur
+        database = con
 
 
 def clear():
@@ -31,9 +31,8 @@ def clear():
 
 
 def initialize():
-    """Connect to database, build tables if they don't exist"""
-    cur.connect()
-    cur.create_tables([ToDo], safe=True)
+    """Connect to database"""
+    con
 
 
 def view_entries(index, entries, single_entry):
@@ -138,7 +137,7 @@ def toggle_protection(entry):
 def menu_loop():
     choice = None
     index = 0  # shows which entry is selected
-    entries = ToDo.select().order_by(ToDo.timestamp.asc())
+    entries = cur.select().order_by(ToDo.timestamp.asc())
     while choice != 'q':
         if len(entries) != 0:
             view_entries(index, entries, False)
