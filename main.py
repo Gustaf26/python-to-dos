@@ -18,7 +18,7 @@ class ToDo():
     """Model for creating to-do items. 'done' indicates that it's been completed,
     'protected' makes it immune to cleanup"""
     task = str
-    timestamp = datetime.datetime.now
+    timestamp = str(datetime.datetime.now)
     done = False
     protected = False
 
@@ -82,7 +82,7 @@ def add_entry(index, entries):
     else:
         protect = False
 
-    taskinfo = (new_task, False, protect, random.randint(0,10000000), ToDo.timestamp)
+    taskinfo = (new_task, False, protect, random.randint(0,10000000), '20211228')
     cur.execute("INSERT INTO mytodos VALUES(?,?,?,?,?)" , taskinfo)
 
 
@@ -156,7 +156,7 @@ def menu_loop():
                 main_menu[choice](index, entries)
             except ZeroDivisionError:
                 continue
-            entries = cur.select().order_by(ToDo.timestamp.asc())  # update entries after operations
+            print(entries)  # update entries after operations
 
         elif choice == 'n':
             index += 1
