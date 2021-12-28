@@ -6,7 +6,6 @@ import datetime
 import os
 
 import sqlite3
-
 con = sqlite3.connect('to_do_list.db')
 con.isolation_level = None
 cur = con.cursor()
@@ -14,16 +13,16 @@ cur = con.cursor()
 # from peewee import *
 
 
-class ToDo(Model):
+class ToDo():
     """Model for creating to-do items. 'done' indicates that it's been completed,
     'protected' makes it immune to cleanup"""
-    task = CharField(max_length=255)
-    timestamp = DateTimeField(default=datetime.datetime.now)
-    done = BooleanField(default=False)
-    protected = BooleanField(default=False)
+    task = str
+    timestamp = datetime.datetime.now
+    done = False
+    protected = False
 
     class Meta:
-        database = con
+        database = cur
 
 
 def clear():
@@ -33,8 +32,8 @@ def clear():
 
 def initialize():
     """Connect to database, build tables if they don't exist"""
-    con.connect()
-    con.create_tables([ToDo], safe=True)
+    cur.connect()
+    cur.create_tables([ToDo], safe=True)
 
 
 def view_entries(index, entries, single_entry):
@@ -180,4 +179,4 @@ sub_menu = OrderedDict([
 if __name__ == '__main__':
     initialize()
     menu_loop()
-    con.close()
+    cur.close()
