@@ -83,7 +83,8 @@ def add_entry(index, entries):
         protect = False
 
     taskinfo = (new_task, False, protect, random.randint(0,10000000), '20211228')
-    cur.execute("INSERT INTO mytodos VALUES(?,?,?,?,?)" , taskinfo)
+    cur.execute("INSERT INTO todos VALUES(?,?,?,?,?)" , taskinfo)
+    view_entries()
 
 
 def modify_entry(index, entries):
@@ -156,7 +157,6 @@ def menu_loop():
                 main_menu[choice](index, entries)
             except ZeroDivisionError:
                 continue
-            print(entries)  # update entries after operations
 
         elif choice == 'n':
             index += 1
