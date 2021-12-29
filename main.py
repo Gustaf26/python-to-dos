@@ -18,7 +18,7 @@ class ToDo():
     """Model for creating to-do items. 'done' indicates that it's been completed,
     'protected' makes it immune to cleanup"""
     task = str
-    timestamp = str(datetime.datetime.now)
+    timestamp = datetime.datetime.today()
     done = False
     protected = False
 
@@ -53,7 +53,7 @@ def view_entries(index, entries, single_entry):
     prev_timestamp = None
 
     for entry in entries:
-        timestamp = entry.timestamp.strftime('%d/%B/%Y')
+        timestamp = entry.timestamp 
 
         if timestamp != prev_timestamp:  # same timestamps get printed only once
             print('\n')
@@ -85,9 +85,10 @@ def add_entry(index, entries):
     else:
         protect = False
 
-    taskinfo = (new_task, False, protect, random.randint(0,10000000), '20211228')
-    cur.execute("INSERT INTO todos VALUES(?,?,?,?,?)" , taskinfo)
-    entries = cur.execute('SELECT * FROM todos')
+    tasklimit = str(ToDo.timestamp)
+    taskinfo = (new_task, 'undone', protect, random.randint(0,10000000), tasklimit)
+    cur.execute("INSERT INTO mytodos VALUES(?,?,?,?,?)" , taskinfo)
+    entries = cur.execute('SELECT * FROM mytodos')
     view_entries(0, entries, False)
 
 
