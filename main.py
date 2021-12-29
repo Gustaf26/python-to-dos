@@ -37,10 +37,13 @@ def initialize():
 
 
 def view_entries(index, entries, single_entry):
+
     """"View to-do list"""
     clear()
+    for row in entries:
+        print(row)
 
-    index = index % len(entries)  # determines which entry is selected for modification
+    # index = index % len(entries)  # determines which entry is selected for modification
     if single_entry:  # to see only 1 entry
         entries = [entries[index]]
         index = 0
@@ -49,7 +52,7 @@ def view_entries(index, entries, single_entry):
         print('=' * 40)
     prev_timestamp = None
 
-    for ind, entry in enumerate(entries):
+    for entry in entries:
         timestamp = entry.timestamp.strftime('%d/%B/%Y')
 
         if timestamp != prev_timestamp:  # same timestamps get printed only once
@@ -58,12 +61,12 @@ def view_entries(index, entries, single_entry):
             print('=' * len(timestamp))
             prev_timestamp = timestamp
 
-        if ind == index:  # placing the selection tick
-            tick = '> '
-        else:
-            tick = '  '
+        # if ind == index:  # placing the selection tick
+        #     tick = '> '
+        # else:
+        #     tick = '  '
 
-        print('{}{}'.format(tick, entry.task), end='')
+        print('{}{}'.format(entry.task), end='')
         if entry.done:
             print('\t(DONE)', end='')
         if entry.protected:
@@ -84,7 +87,8 @@ def add_entry(index, entries):
 
     taskinfo = (new_task, False, protect, random.randint(0,10000000), '20211228')
     cur.execute("INSERT INTO todos VALUES(?,?,?,?,?)" , taskinfo)
-    view_entries()
+    entries = cur.execute('SELECT * FROM todos')
+    view_entries(0, entries, False)
 
 
 def modify_entry(index, entries):
