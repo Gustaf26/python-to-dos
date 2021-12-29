@@ -43,7 +43,7 @@ def view_entries(index, entries, single_entry):
     for row in entries:
         print(row)
 
-    # index = index % len(entries)  # determines which entry is selected for modification
+    # determines which entry is selected for modification
     if single_entry:  # to see only 1 entry
         entries = [entries[index]]
         index = 0
@@ -94,7 +94,12 @@ def add_entry(index, entries):
 
 def modify_entry(index, entries):
     """Modify selected entry"""
-    entry = view_entries(index, entries, True)[0]
+    id = input('Enter id of task')
+    entries = cur.execute('SELECT * FROM mytodos')
+    for entry in entries:
+        if int(id) in entry:
+            print('Hello')
+            cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
     print('\n\n')
 
     for key, value in sub_menu.items():
@@ -113,8 +118,10 @@ def cleanup_entries(index, entries):
     if (input('Have you checked that you protected the important stuff? [yN]').lower().strip() == 'y'):
         now = datetime.datetime.now()
         for entry in entries:
-            if (now - entry.timestamp > datetime.timedelta(7, 0, 0) and entry.done and not entry.protected):
-                entry.delete_instance()
+            if (now - entry.timestamp > datetime.timedelta(0, 180, 0) and entry.done =="done"):
+                id = entry.id
+                cur.execute(f'DELETE FROM mytodos WHERE ID = {id}')
+        view_entries(0,entries, False)
 
 
 def modify_task(entry):
@@ -136,22 +143,20 @@ def toggle_done(entry):
     entry.save()
 
 
-def toggle_protection(entry):
-    """Toggle 'protected'"""
-    entry.protected = not entry.protected
-    entry.save()
+# def toggle_protection(entry):
+#     """Toggle 'protected'"""
+#     entry.protected = not entry.protected
+#     entry.save()
 
 
 def menu_loop():
     choice = None
     index = 0  # shows which entry is selected
-    entries = cur.fetchall()
+    entries = cur.execute('SELECT * FROM mytodos')
+    view_entries(index, entries, False)
     while choice != 'q':
-        if len(entries) != 0:
-            view_entries(index, entries, False)
-
+        if entries:
             print('\n' + '=' * 40 + '\n')
-            print('Previous/Next: p/n \n')
         for key, value in main_menu.items():
             print('{}) {}'.format(key, value.__doc__))
         print('q) Quit')
@@ -163,12 +168,6 @@ def menu_loop():
             except ZeroDivisionError:
                 continue
 
-        elif choice == 'n':
-            index += 1
-        elif choice == 'p':
-            index -= 1
-
-
 main_menu = OrderedDict([
     ('a', add_entry),
     ('m', modify_entry),
@@ -178,7 +177,6 @@ main_menu = OrderedDict([
 sub_menu = OrderedDict([
     ('m', modify_task),
     ('d', toggle_done),
-    ('p', toggle_protection),
     ('e', delete_entry)
 ])
 
