@@ -37,22 +37,17 @@ def initialize():
     con
 
 
-def view_entries(index, entries, single_entry):
+def view_entries(entries):
 
     """"View to-do list"""
     clear()
     for row in entries:
         print(row)
 
-    # determines which entry is selected for modification
-    # if single_entry:  # to see only 1 entry
-    #     entries = [entries[index]]
-    #     index = 0
-    # else:
     print('\nMY TO-DO LIST')
     print('=' * 40)
 
-    return entries  # so that we can modify the given entry if needed
+    return entries  
 
 
 def add_entry(entries):
@@ -68,7 +63,7 @@ def add_entry(entries):
     taskinfo = (new_task, 'undone', protect, random.randint(0,10000000), tasklimit)
     cur.execute("INSERT INTO mytodos VALUES(?,?,?,?,?)" , taskinfo)
     entries = cur.execute('SELECT * FROM mytodos')
-    view_entries(0, entries, False)
+    view_entries(entries)
 
 
 def modify_entry(entries):
@@ -84,25 +79,25 @@ def modify_entry(entries):
     if next_action.lower().strip() in sub_menu:
         sub_menu[next_action](cur, id)
         entries = cur.execute('SELECT * FROM mytodos')
-        view_entries(0,entries,False)
+        view_entries(entries)
     else:
         return
 
 
 def cleanup_entries(entries):
-    """Cleanup: delete completed, non-protected entries older than a week"""
+    """Cleanup: delete of entries with status 'Done'"""
     if (input('Are you sure you want to delete the done tasks? [yN]').lower().strip() == 'y'):
         for entry in entries:
-            if "done" in entry:
-                cur.execute(f'DELETE FROM mytodos WHERE DONE = "Done"')
-        view_entries(0,entries, False)
+            if "Done" in entry:
+                cur.execute(f"DELETE FROM mytodos WHERE DONE = 'Done'")
+        entries = cur.execute('SELECT * FROM mytodos')
+        view_entries(entries)
 
 
 def menu_loop():
     choice = None
-    index = 0  # shows which entry is selected
     entries = cur.execute('SELECT * FROM mytodos')
-    view_entries(index, entries, False)
+    view_entries(entries)
     while choice != 'q':
         if entries:
             print('\n' + '=' * 40 + '\n')
