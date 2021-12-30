@@ -95,12 +95,6 @@ def add_entry(index, entries):
 def modify_entry(index, entries):
     """Modify selected entry"""
     id = input('Enter id of task')
-    # entries = cur.execute('SELECT * FROM mytodos')
-    # for entry in entries:
-    #     if int(id) in entry and 'undone' in entry:
-    #         cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
-    #     elif int(id) in entry and 'Done' in entry:
-    #         cur.execute(f"UPDATE mytodos SET DONE='undone' WHERE ID={id}")
     print('\n\n')
 
     for key, value in sub_menu.items():
@@ -125,11 +119,15 @@ def cleanup_entries(index, entries):
         view_entries(0,entries, False)
 
 
-def modify_task(entry, id):
+def modify_task(id):
     """Modify task"""
-    new_task = input('> ')
-    entry.task = new_task
-    entry.save()
+    new_task = input('Change task to something else > ')
+    entries = cur.execute('SELECT * FROM mytodos')
+    for entry in entries:
+        if int(id) in entry:
+            cur.execute(f"UPDATE mytodos SET TASK='{str(new_task)}' WHERE ID={id}")
+    entries = cur.execute('SELECT * FROM mytodos')
+    view_entries(0,entries,False)
 
 
 def delete_entry(entry, id):
@@ -148,12 +146,6 @@ def toggle_done(id):
             cur.execute(f"UPDATE mytodos SET DONE='undone' WHERE ID={id}")
     entries = cur.execute('SELECT * FROM mytodos')
     view_entries(0,entries,False)
-
-
-# def toggle_protection(entry):
-#     """Toggle 'protected'"""
-#     entry.protected = not entry.protected
-#     entry.save()
 
 
 def menu_loop():
