@@ -100,12 +100,6 @@ def cleanup_entries(index, entries):
         view_entries(0,entries, False)
 
 
-# def delete_entry(entry, id):
-#     """Erase entry"""
-#     if (input('Are you sure [yN]? ').lower().strip() == 'y'):
-#         entry.delete_instance()
-
-
 def menu_loop():
     choice = None
     index = 0  # shows which entry is selected
