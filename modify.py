@@ -14,3 +14,11 @@ def toggle_done(cur, id):
             cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
         elif int(id) in entry and 'Done' in entry:
             cur.execute(f"UPDATE mytodos SET DONE='undone' WHERE ID={id}")
+
+def delete_entry(cur, id):
+    """Erase entry"""
+    if (input('Are you sure [yN]? ').lower().strip() == 'y'):
+        entries = cur.execute('SELECT * FROM mytodos')
+        for entry in entries:
+            if int(id) in entry:
+                cur.execute(f"DELETE FROM mytodos WHERE ID={id}")

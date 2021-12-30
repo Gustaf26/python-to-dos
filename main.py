@@ -100,10 +100,10 @@ def cleanup_entries(index, entries):
         view_entries(0,entries, False)
 
 
-def delete_entry(entry, id):
-    """Erase entry"""
-    if (input('Are you sure [yN]? ').lower().strip() == 'y'):
-        entry.delete_instance()
+# def delete_entry(entry, id):
+#     """Erase entry"""
+#     if (input('Are you sure [yN]? ').lower().strip() == 'y'):
+#         entry.delete_instance()
 
 
 def menu_loop():
@@ -134,7 +134,7 @@ main_menu = OrderedDict([
 sub_menu = OrderedDict([
     ('m', modify.modify_task),
     ('d', modify.toggle_done),
-    ('e', delete_entry)
+    ('e', modify.delete_entry)
 ])
 
 if __name__ == '__main__':
