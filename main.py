@@ -5,6 +5,7 @@ from collections import OrderedDict
 import random
 import datetime
 import os
+import modify
 
 import sqlite3
 con = sqlite3.connect('to_do_list.db')
@@ -103,7 +104,9 @@ def modify_entry(index, entries):
     next_action = input('Action: ')
 
     if next_action.lower().strip() in sub_menu:
-        sub_menu[next_action](id)
+        sub_menu[next_action](cur, id)
+        entries = cur.execute('SELECT * FROM mytodos')
+        view_entries(0,entries,False)
     else:
         return
 
@@ -119,33 +122,10 @@ def cleanup_entries(index, entries):
         view_entries(0,entries, False)
 
 
-def modify_task(id):
-    """Modify task"""
-    new_task = input('Change task to something else > ')
-    entries = cur.execute('SELECT * FROM mytodos')
-    for entry in entries:
-        if int(id) in entry:
-            cur.execute(f"UPDATE mytodos SET TASK='{str(new_task)}' WHERE ID={id}")
-    entries = cur.execute('SELECT * FROM mytodos')
-    view_entries(0,entries,False)
-
-
 def delete_entry(entry, id):
     """Erase entry"""
     if (input('Are you sure [yN]? ').lower().strip() == 'y'):
         entry.delete_instance()
-
-
-def toggle_done(id):
-    """Toggle 'DONE'"""
-    entries = cur.execute('SELECT * FROM mytodos')
-    for entry in entries:
-        if int(id) in entry and 'undone' in entry:
-            cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
-        elif int(id) in entry and 'Done' in entry:
-            cur.execute(f"UPDATE mytodos SET DONE='undone' WHERE ID={id}")
-    entries = cur.execute('SELECT * FROM mytodos')
-    view_entries(0,entries,False)
 
 
 def menu_loop():
@@ -174,8 +154,8 @@ main_menu = OrderedDict([
 ])
 
 sub_menu = OrderedDict([
-    ('m', modify_task),
-    ('d', toggle_done),
+    ('m', modify.modify_task),
+    ('d', modify.toggle_done),
     ('e', delete_entry)
 ])
 
