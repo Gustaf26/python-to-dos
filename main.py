@@ -1,6 +1,8 @@
-"""To-do list where you can chronologically add your tasks, modify them and mark if they have been completed.
-  A cleanup feature enables you to delete completed tasks which are more than a week old - unless
-  you have flagged them as 'protected'."""
+"""To-do list where you can add your tasks, modify them and delete if they have been completed.
+  A cleanup feature enables you to delete completed tasks"""
+
+"""I follow SQL syntax for queries, available at https://www.tutorialspoint.com/sql/sql-delete-query.htm"""
+
 from collections import OrderedDict
 import random
 import datetime
@@ -19,7 +21,7 @@ class ToDo():
     """Model for creating to-do items. 'done' indicates that it's been completed,
     'protected' makes it immune to cleanup"""
     task = str
-    timestamp = datetime.datetime.today()
+    timestamp = datetime.datetime.today() + datetime.timedelta(hours=12)
     done = False
     protected = False
 
@@ -87,8 +89,10 @@ def modify_entry(entries):
 def cleanup_entries(entries):
     """Cleanup: delete of entries with status 'Done'"""
     if (input('Are you sure you want to delete the done tasks? [yN]').lower().strip() == 'y'):
+        entries = cur.execute('SELECT * FROM mytodos')
         for entry in entries:
             if "Done" in entry:
+                print('hello')
                 cur.execute(f"DELETE FROM mytodos WHERE DONE = 'Done'")
         entries = cur.execute('SELECT * FROM mytodos')
         view_entries(entries)
