@@ -51,28 +51,6 @@ def view_entries(index, entries, single_entry):
     else:
         print('\nMY TO-DO LIST')
         print('=' * 40)
-    prev_timestamp = None
-
-    for entry in entries:
-        timestamp = entry.timestamp 
-
-        if timestamp != prev_timestamp:  # same timestamps get printed only once
-            print('\n')
-            print(timestamp)
-            print('=' * len(timestamp))
-            prev_timestamp = timestamp
-
-        # if ind == index:  # placing the selection tick
-        #     tick = '> '
-        # else:
-        #     tick = '  '
-
-        print('{}{}'.format(entry.task), end='')
-        if entry.done:
-            print('\t(DONE)', end='')
-        if entry.protected:
-            print('\t <P>', end='')
-        print('')
 
     return entries  # so that we can modify the given entry if needed
 
