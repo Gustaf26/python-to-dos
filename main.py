@@ -45,17 +45,17 @@ def view_entries(index, entries, single_entry):
         print(row)
 
     # determines which entry is selected for modification
-    if single_entry:  # to see only 1 entry
-        entries = [entries[index]]
-        index = 0
-    else:
-        print('\nMY TO-DO LIST')
-        print('=' * 40)
+    # if single_entry:  # to see only 1 entry
+    #     entries = [entries[index]]
+    #     index = 0
+    # else:
+    print('\nMY TO-DO LIST')
+    print('=' * 40)
 
     return entries  # so that we can modify the given entry if needed
 
 
-def add_entry(index, entries):
+def add_entry(entries):
     """Add a new task"""
 
     new_task = input('\nTo do: ')
@@ -71,7 +71,7 @@ def add_entry(index, entries):
     view_entries(0, entries, False)
 
 
-def modify_entry(index, entries):
+def modify_entry(entries):
     """Modify selected entry"""
     id = input('Enter id of task')
     print('\n\n')
@@ -89,14 +89,12 @@ def modify_entry(index, entries):
         return
 
 
-def cleanup_entries(index, entries):
+def cleanup_entries(entries):
     """Cleanup: delete completed, non-protected entries older than a week"""
-    if (input('Have you checked that you protected the important stuff? [yN]').lower().strip() == 'y'):
-        now = datetime.datetime.now()
+    if (input('Are you sure you want to delete the done tasks? [yN]').lower().strip() == 'y'):
         for entry in entries:
-            if (now - entry.timestamp > datetime.timedelta(0, 180, 0) and entry.done =="done"):
-                id = entry.id
-                cur.execute(f'DELETE FROM mytodos WHERE ID = {id}')
+            if "done" in entry:
+                cur.execute(f'DELETE FROM mytodos WHERE DONE = "Done"')
         view_entries(0,entries, False)
 
 
@@ -115,7 +113,7 @@ def menu_loop():
         choice = input('\nAction: ')
         if choice in main_menu:
             try:
-                main_menu[choice](index, entries)
+                main_menu[choice](entries)
             except ZeroDivisionError:
                 continue
 
