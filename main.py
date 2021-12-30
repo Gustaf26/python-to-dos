@@ -95,11 +95,12 @@ def add_entry(index, entries):
 def modify_entry(index, entries):
     """Modify selected entry"""
     id = input('Enter id of task')
-    entries = cur.execute('SELECT * FROM mytodos')
-    for entry in entries:
-        if int(id) in entry:
-            print('Hello')
-            cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
+    # entries = cur.execute('SELECT * FROM mytodos')
+    # for entry in entries:
+    #     if int(id) in entry and 'undone' in entry:
+    #         cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
+    #     elif int(id) in entry and 'Done' in entry:
+    #         cur.execute(f"UPDATE mytodos SET DONE='undone' WHERE ID={id}")
     print('\n\n')
 
     for key, value in sub_menu.items():
@@ -108,7 +109,7 @@ def modify_entry(index, entries):
     next_action = input('Action: ')
 
     if next_action.lower().strip() in sub_menu:
-        sub_menu[next_action](entry)
+        sub_menu[next_action](id)
     else:
         return
 
@@ -124,23 +125,29 @@ def cleanup_entries(index, entries):
         view_entries(0,entries, False)
 
 
-def modify_task(entry):
+def modify_task(entry, id):
     """Modify task"""
     new_task = input('> ')
     entry.task = new_task
     entry.save()
 
 
-def delete_entry(entry):
+def delete_entry(entry, id):
     """Erase entry"""
     if (input('Are you sure [yN]? ').lower().strip() == 'y'):
         entry.delete_instance()
 
 
-def toggle_done(entry):
+def toggle_done(id):
     """Toggle 'DONE'"""
-    entry.done = not entry.done
-    entry.save()
+    entries = cur.execute('SELECT * FROM mytodos')
+    for entry in entries:
+        if int(id) in entry and 'undone' in entry:
+            cur.execute(f"UPDATE mytodos SET DONE='Done' WHERE ID={id}")
+        elif int(id) in entry and 'Done' in entry:
+            cur.execute(f"UPDATE mytodos SET DONE='undone' WHERE ID={id}")
+    entries = cur.execute('SELECT * FROM mytodos')
+    view_entries(0,entries,False)
 
 
 # def toggle_protection(entry):
