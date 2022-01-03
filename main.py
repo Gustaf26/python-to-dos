@@ -10,23 +10,22 @@ import os
 import modify
 
 import sqlite3
+
+# sqlite3.connect is the connection object to the database
 con = sqlite3.connect('to_do_list.db')
-con.isolation_level = None
+# Con.cursor() is an inner object that gives us access to SQL Queries
 cur = con.cursor()
-
-# from peewee import *
-
 
 class ToDo():
     """Model for creating to-do items. 'done' indicates that it's been completed,
     'protected' makes it immune to cleanup"""
-    task = str
+    #task = str
     timestamp = datetime.datetime.today() + datetime.timedelta(hours=12)
-    done = False
-    protected = False
+    #done = False
+    #protected = False
 
     class Meta:
-        database = con
+         database = con
 
 
 def clear():
@@ -38,7 +37,7 @@ def initialize():
     """Connect to database"""
     con
 
-
+# Function to view todos
 def view_entries(entries):
 
     """"View to-do list"""
@@ -48,36 +47,33 @@ def view_entries(entries):
 
     print('\nMY TO-DO LIST')
     print('=' * 40)
-
     return entries  
 
-
+# Function to add a new to do
 def add_entry(entries):
     """Add a new task"""
 
     new_task = input('\nTo do: ')
-    if input('Protect [yN]? ').lower().strip() == 'y':
-        protect = True
-    else:
-        protect = False
-
+    protect = 'No'
     tasklimit = str(ToDo.timestamp)
     taskinfo = (new_task, 'undone', protect, random.randint(0,10000000), tasklimit)
     cur.execute("INSERT INTO mytodos VALUES(?,?,?,?,?)" , taskinfo)
     entries = cur.execute('SELECT * FROM mytodos')
     view_entries(entries)
 
-
+# Function to modify an existing to do taken by id
 def modify_entry(entries):
     """Modify selected entry"""
     id = input('Enter id of task')
     print('\n\n')
 
+    # Loop through submenu to see what we wanna do with the to do
     for key, value in sub_menu.items():
         print('{}) {}'.format(key, sub_menu[key].__doc__))
     print('q) Back to Main')
     next_action = input('Action: ')
 
+    # Action to be taken, each action imported from modify.py
     if next_action.lower().strip() in sub_menu:
         sub_menu[next_action](cur, id)
         entries = cur.execute('SELECT * FROM mytodos')
@@ -105,6 +101,10 @@ def menu_loop():
     while choice != 'q':
         if entries:
             print('\n' + '=' * 40 + '\n')
+
+        #The items() method returns a view object. 
+        # The view object contains the key-value pairs of the dictionary, 
+        # as tuples in a list.
         for key, value in main_menu.items():
             print('{}) {}'.format(key, value.__doc__))
         print('q) Quit')
@@ -115,6 +115,13 @@ def menu_loop():
                 main_menu[choice](entries)
             except ZeroDivisionError:
                 continue
+
+# An OrderedDict is a dictionary that remembers the order that keys were first inserted. 
+# The only difference between dict() and OrderedDict() is that:
+# OrderedDict preserves the order in which the keys are inserted. 
+# A regular dict doesn’t track the insertion order, and iterating it gives 
+# the values in an arbitrary order. By contrast, the order the items are 
+# inserted is remembered by OrderedDict.
 
 main_menu = OrderedDict([
     ('a', add_entry),
