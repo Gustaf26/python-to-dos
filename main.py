@@ -13,6 +13,9 @@ import sqlite3
 
 # sqlite3.connect is the connection object to the database
 con = sqlite3.connect('to_do_list.db')
+# This statement is related to the db cache and is important to have it present
+# It has to do with the updates in the db being synchronized with the cache in db file
+con.isolation_level = None
 # Con.cursor() is an inner object that gives us access to SQL Queries
 cur = con.cursor()
 
