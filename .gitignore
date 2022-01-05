@@ -1,0 +1,7 @@
+# Byte-compiled / optimized / DLL files
+__pycache__
+
+venv/
+
+to_do_list.db
+to_do_list.sqbpro
