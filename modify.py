@@ -1,10 +1,10 @@
-# These are the modification options for the cosen to-do that 
-# is going to be modified
+# These are the modification options for the chosen to-do that is going to be modified
 
 # They all take the todo-id -that you set into the terminal when running the program- as argument and receive as first argument the cur object that lets us modify the db
 
 # They also have for-loops, which loop through the entries in db in order to do something with the specified entry (toggle done, modify task or delete)
 
+# Let´s modify a task!
 def modify_task(cur, id):
     """Modify task"""
     new_task = input('Change task to something else > ')
